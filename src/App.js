@@ -56,7 +56,7 @@ function App() {
         <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
       </div>
       <div className="mx-auto max-w-2xl pt-16">
-        <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+        <div className="mb-8 flex justify-center">
           <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
             {quote.text} - <i>{quote.author}</i>
           </div>
