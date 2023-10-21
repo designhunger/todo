@@ -1,51 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
+import Quote from "./Quote";
+import Header from "./Header";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState("");
-  const [quote, setQuote] = useState("");
+  const [todoText, setTodoText] = useState("");
 
   const addTodo = (e) => {
     e.preventDefault();
 
+    let currentDate = new Date();
+
     setTodos([
       ...todos,
-      todo
-        .toLowerCase()
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" "),
+      [
+        crypto.randomUUID(),
+        todoText.charAt(0).toUpperCase() + todoText.slice(1),
+        currentDate.toDateString(),
+        false,
+      ],
     ]);
-    setTodo("");
+    setTodoText("");
+  };
+
+  const deleteTodo = (todoId) => {
+    const updatedTodos = todos.filter((todo) => {
+      return todo[0] !== todoId;
+    });
+
+    setTodos(updatedTodos);
+  };
+
+  const markCompleted = (todoId) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo[0] === todoId) {
+        return [todo[0], todo[1], todo[2], todo[3] ? false : true];
+      }
+      return todo;
+    });
+
+    setTodos(updatedTodos);
   };
 
   const handleChange = (e) => {
-    setTodo(e.target.value);
+    setTodoText(e.target.value);
   };
-
-  useEffect(() => {
-    const getQuotes = async () =>
-      await fetch(`https://type.fit/api/quotes`)
-        .then((res) => res.json())
-        .then((data) => {
-          const rand = Math.floor(Math.random() * data.length);
-
-          setQuote(data[rand]);
-        });
-
-    getQuotes();
-  }, []);
-
-  // todo erweitern
-  // - id: uuid
-  // - dueAt: date
-  // - done: bool
-
-  // Dot rot anzeigen, wenn überfällig
-  // Dot grün anzeigen, wenn zukünftig oder heute
-
-  // Sortierung nach dueAt
 
   return (
     <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -57,24 +57,15 @@ function App() {
       </div>
       <div className="mx-auto max-w-2xl pt-16">
         <div className="mb-8 flex justify-center">
-          <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-            {quote.text} - <i>{quote.author}</i>
-          </div>
+          <Quote />
         </div>
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            My great Teux Deux app
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            This is the perfect spot to note all your ToDos for the next days.
-            Type in all you need to do and be happy to strike the items when
-            done!
-          </p>
+          <Header />
 
           <div className="relative mt-10 rounded-md shadow-sm">
             <form>
               <input
-                value={todo}
+                value={todoText}
                 onChange={handleChange}
                 className="shadow-sm block w-full rounded-md border-0 py-5 pl-5 pr-52 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xl sm:leading-6"
                 placeholder="What's your next task?"
@@ -105,11 +96,31 @@ function App() {
               <div className="bg-white shadow-md rounded-lg px-3 py-2 mb-4">
                 <div className="text-sm">
                   {todos.map((todo) => (
-                    <div className="flex justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
-                      <span className="bg-green-400 h-2 w-2 m-2 rounded-full"></span>
-                      <div className="flex-grow font-medium px-2">{todo}</div>
+                    <div
+                      key={todo[0]}
+                      className="flex justify-start cursor-pointer text-gray-700 hover:text-gray-600  rounded-md px-2 py-2 my-2"
+                    >
+                      <input
+                        type="checkbox"
+                        onClick={markCompleted.bind(this, todo[0])}
+                        className="h-5 w-5 rounded-full checked:bg-green-400"
+                      />
+                      {/* <span
+                        onClick={markCompleted.bind(this, todo[0])}
+                        className="bg-green-400 h-2 w-2 m-2 rounded-full"
+                      ></span> */}
+                      <div
+                        className={
+                          "flex-grow font-medium px-2 " +
+                          (todo[3] ? "text-green-400 line-through" : "")
+                        }
+                      >
+                        {todo[1]}
+                      </div>
                       <div className="text-sm font-normal text-gray-500 tracking-wide">
-                        31.10.23
+                        <button onClick={deleteTodo.bind(this, todo[0])}>
+                          Delete
+                        </button>
                       </div>
                     </div>
                   ))}

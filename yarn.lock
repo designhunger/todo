@@ -1845,6 +1845,13 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@tailwindcss/forms@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.5.6.tgz#29c6c2b032b363e0c5110efed1499867f6d7e868"
+  integrity sha512-Fw+2BJ0tmAwK/w01tEFL5TiaJBX1NLT1/YbWgvm7ws3Qcn11kiXxzNTEQDMs5V3mQemhB56l3u0i9dwdzSQldA==
+  dependencies:
+    mini-svg-data-uri "^1.2.3"
+
 "@testing-library/dom@^8.5.0":
   version "8.20.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.20.1.tgz#2e52a32e46fc88369eef7eef634ac2a192decd9f"
@@ -2122,14 +2129,14 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.6.tgz#7cb33992049fd7340d5b10c0098e104184dfcd2a"
   integrity sha512-+0autS93xyXizIYiyL02FCY8N+KkKPhILhcUSA276HxzreZ16kl+cmwvV2qAM/PuCCwPXzOXOWhiPcw20uSFcA==
 
-"@types/react-dom@^18.0.0":
+"@types/react-dom@^18.0.0", "@types/react-dom@^18.2.14":
   version "18.2.14"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.14.tgz#c01ba40e5bb57fc1dc41569bb3ccdb19eab1c539"
   integrity sha512-V835xgdSVmyQmI1KLV2BEIUgqEuinxp9O4G6g3FqO/SqLac049E53aysv0oEFD2kHfejeKU+ZqL2bcFWj9gLAQ==
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react@*", "@types/react@^18.2.31":
   version "18.2.31"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.31.tgz#74ae2630e4aa9af599584157abd3b95d96fb9b40"
   integrity sha512-c2UnPv548q+5DFh03y8lEDeMfDwBn9G3dRwfkrxQMo/dOtRHUUO57k6pHvBIfH/VF4Nh+98mZ5aaSe+2echD5g==
@@ -6532,6 +6539,11 @@ mini-css-extract-plugin@^2.4.5:
   integrity sha512-Qk7HcgaPkGG6eD77mLvZS1nmxlao3j+9PkrT9Uc7HAE1id3F41+DdBRYRYkbyfNRGzm8/YWtzhw7nVPmwhqTQw==
   dependencies:
     schema-utils "^4.0.0"
+
+mini-svg-data-uri@^1.2.3:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz#8ab0aabcdf8c29ad5693ca595af19dd2ead09939"
+  integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
 
 minimalistic-assert@^1.0.0:
   version "1.0.1"
