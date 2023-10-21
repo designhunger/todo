@@ -1,15 +1,45 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import FlipMove from "react-flip-move";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./App.css";
-import Quote from "./Quote";
-import Header from "./Header";
+import Quote from "./components/Quote";
+import Header from "./components/Header";
+import { setTodos } from "./redux/todosSlice";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const todos = useSelector((state) => state.todos.todos);
+  const dispatch = useDispatch();
+
   const [inputTodoText, setInputTodoText] = useState("");
   const [editedTodoText, setEditedTodoText] = useState("");
   const [editedTodoId, setEditedTodoId] = useState("");
+
+  const useOutsideClick = (callback) => {
+    const ref = React.useRef();
+
+    React.useEffect(() => {
+      const handleClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          callback();
+        }
+      };
+
+      document.addEventListener("click", handleClick, true);
+
+      return () => {
+        document.removeEventListener("click", handleClick, true);
+      };
+    }, [ref]);
+
+    return ref;
+  };
+
+  const handleClickOutside = () => {
+    setEditedTodoId("");
+  };
+
+  const ref = useOutsideClick(handleClickOutside);
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -17,15 +47,17 @@ function App() {
     if (inputTodoText.length > 0) {
       let currentDate = new Date();
 
-      setTodos([
-        ...todos,
-        [
-          crypto.randomUUID(),
-          inputTodoText.charAt(0).toUpperCase() + inputTodoText.slice(1),
-          currentDate.toDateString(),
-          false,
-        ],
-      ]);
+      dispatch(
+        setTodos([
+          ...todos,
+          [
+            crypto.randomUUID(),
+            inputTodoText.charAt(0).toUpperCase() + inputTodoText.slice(1),
+            currentDate.toDateString(),
+            false,
+          ],
+        ])
+      );
       setInputTodoText("");
     }
   };
@@ -35,10 +67,10 @@ function App() {
       return todo[0] !== todoId;
     });
 
-    setTodos(updatedTodos);
+    dispatch(setTodos(updatedTodos));
   };
 
-  const markCompleted = (todoId) => {
+  const completeTodo = (todoId) => {
     const updatedTodos = todos.map((todo) => {
       if (todo[0] === todoId) {
         return [todo[0], todo[1], todo[2], todo[3] ? false : true];
@@ -46,7 +78,7 @@ function App() {
       return todo;
     });
 
-    setTodos(updatedTodos);
+    dispatch(setTodos(updatedTodos));
   };
 
   const handleInputChange = (e) => {
@@ -66,7 +98,7 @@ function App() {
         return todo;
       });
 
-      setTodos(updatedTodos);
+      dispatch(setTodos(updatedTodos));
 
       setEditedTodoId("");
     }
@@ -74,11 +106,11 @@ function App() {
 
   const showEditForm = (todoId) => {
     todos.find((todo) => {
-      if (todo[0] === todoId) {
+      if (todo[0] === todoId && todo[3] === false) {
         setEditedTodoText(todo[1]);
+        setEditedTodoId(todoId);
       }
     });
-    setEditedTodoId(todoId);
   };
 
   return (
@@ -101,7 +133,7 @@ function App() {
               <input
                 value={inputTodoText}
                 onChange={handleInputChange}
-                className="shadow-sm block w-full rounded-md border-0 py-5 pl-5 pr-52 text-gray-800 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xl sm:leading-6"
+                className="shadow-sm block w-full rounded-md border-0 py-5 pl-5 pr-52 text-gray-800 ring-0 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xl sm:leading-6"
                 placeholder="What's your next task?"
               />
               <div className="absolute inset-y-0 right-0 flex items-center">
@@ -137,7 +169,7 @@ function App() {
                       >
                         <input
                           type="checkbox"
-                          onClick={() => markCompleted(todo[0])}
+                          onClick={() => completeTodo(todo[0])}
                           className="h-5 w-5 cursor-pointer rounded-full checked:bg-green-400 focus:ring-green-400 text-green-400 "
                         />
                         <div
@@ -145,34 +177,20 @@ function App() {
                             "flex-grow font-medium px-2 " +
                             (todo[3] ? "text-green-400 line-through" : "")
                           }
+                          onClick={() => showEditForm(todo[0])}
                         >
                           {(editedTodoId === todo[0] && (
                             <input
                               value={editedTodoText}
                               onChange={handleUpdateChange}
                               onKeyDown={handleTodoUpdate}
+                              ref={ref}
                               className="shadow-sm block w-full border-0 border-b-2 p-0 pb-2 text-gray-800 ring-0 border-gray-300 focus:ring-0 focus:border-t-0 focus:border-b-2 focus:border-indigo-600"
                             />
                           )) ||
                             todo[1]}
                         </div>
                         <div className="text-sm font-normal text-gray-500 tracking-wide">
-                          <button onClick={() => showEditForm(todo[0])}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5 me-3"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                              />
-                            </svg>
-                          </button>
                           <button onClick={() => deleteTodo(todo[0])}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
