@@ -30,7 +30,7 @@ function App() {
       return () => {
         document.removeEventListener("click", handleClick, true);
       };
-    }, [ref]);
+    }, [ref, callback]);
 
     return ref;
   };
@@ -170,6 +170,7 @@ function App() {
                         <input
                           type="checkbox"
                           onClick={() => completeTodo(todo[0])}
+                          defaultChecked={todo[3]}
                           className="h-5 w-5 cursor-pointer rounded-full checked:bg-green-400 focus:ring-green-400 text-green-400 "
                         />
                         <div
